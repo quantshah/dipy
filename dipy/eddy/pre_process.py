@@ -12,10 +12,10 @@ from dipy.io import read_bvals_bvecs
 from dipy.core.gradients import gradient_table
 
 
-def hist_clip(img, lowerclip=0.4, upper_clip=0.99, rescale_flag=False):
+def hist_clip(img, lower_clip=0.4, upper_clip=0.99, rescale_flag=False):
     r"""
     Clips the input array values (img) so that the range of values will be
-    between the pixel-count proportions specified by lowerClip and upper_clip.
+    between the pixel-count proportions specified by lower_Clip and upper_clip.
 
     Eg, if lower_clip = 0.20 and upper_clip = 0.98, then the values in img will
     be clipped so that the lowest value is that of the 20th percentile of the
@@ -59,6 +59,7 @@ def hist_clip(img, lowerclip=0.4, upper_clip=0.99, rescale_flag=False):
     >>>img = nib.load(fimg) 
     >>>img_clipped, clipvals= hist_clip(img.get_data(), 0.4, 0.99, rescale_flag=True)
     """
+    
     if upper_clip > 1:
         upper_clip = 0.99
         lowerClip = 0.4
@@ -80,3 +81,22 @@ def hist_clip(img, lowerclip=0.4, upper_clip=0.99, rescale_flag=False):
         img = img / (upper_clip_val - lower_clip_val)
     clipvals = [lower_clip_val, upper_clip_val]
     return img, clipvals
+
+
+def smooth_uint8(img, fwhm):
+    r"""smoothing function for images to convolve a uint8 volume with 
+    a smoothing kernel (fwhm in voxels).
+
+    ----------
+    img : numpy.ndarray
+        numpy array containing the image data obtained from 
+        img = nib.load(fimg)
+        where fimg is the filename of the image
+
+    fwhm
+
+    Returns
+    -------
+
+    """
+    return 0
