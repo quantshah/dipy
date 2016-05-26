@@ -146,7 +146,8 @@ def nlls_fit(data, gtab, jac=False):
     bvals = gtab.bvals
     ivim_params = np.empty((flat_data.shape[0], 4))
     for vox in range(flat_data.shape[0]):
-        popt, pcov = curve_fit(ivim_function, bvals, flat_data[vox])
+        popt, pcov = curve_fit(ivim_function, bvals, flat_data[vox],
+                               p0=[1.0, 0.10, 0.001, 0.001])
         ivim_params[vox, :4] = popt
 
     ivim_params.shape = data.shape[:-1] + (4,)
