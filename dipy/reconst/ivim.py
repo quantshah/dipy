@@ -12,9 +12,8 @@ from dipy.reconst.dti import _min_positive_signal
 
 
 def ivim_function(bvals, S0, f, D_star, D):
-    S = np.vectorize(lambda b, S0, f, D_star, D: S0 *
-                     (f * np.exp(-b * D_star) + (1 - f) * np.exp(-b * D)))
-    return S(bvals, S0, f, D_star, D)
+    S = S0 * (f * np.exp(-bvals * D_star) + (1 - f) * np.exp(-bvals * D))
+    return S
 
 
 class IvimModel(ReconstModel):
@@ -104,7 +103,7 @@ class IvimFit(object):
         """ Initialize a IvimFit class instance.
             Parameters
             ----------
-            The model parameters are S0, f, D, D_star
+            The model parameters are S0, f, D_star, D
         """
         self.model = model
         self.model_params = model_params
