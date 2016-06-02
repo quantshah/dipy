@@ -4,7 +4,7 @@ from __future__ import division, print_function, absolute_import
 import warnings
 import functools
 import numpy as np
-from scipy.optimize import leastsq
+from scipy.optimize import leastsq, minimize
 
 from dipy.core.gradients import gradient_table
 from dipy.reconst.base import ReconstModel
@@ -29,7 +29,7 @@ def ivim_function(params, bvals):
 def _ivim_error(params, bvals, signal):
     """Error function to be used in fitting the model
     """
-    return signal - ivim_function(params, bvals)
+    return np.sum((signal - ivim_function(params, bvals)) ** 2)
 
 
 class IvimModel(ReconstModel):
@@ -174,10 +174,10 @@ def one_stage(data, gtab, x0, jac=False, bounds=None):
     bvals = gtab.bvals
     ivim_params = np.empty((flat_data.shape[0], 4))
     for vox in range(flat_data.shape[0]):
-        res = leastsq(_ivim_error,
+        res = minimize(_ivim_error,
                       x0[vox],
                       args=(bvals, flat_data[vox]))
-        ivim_params[vox, :4] = res[0]
+        ivim_params[vox, :4] = res.x
 
     ivim_params.shape = data.shape[:-1] + (4,)
     return ivim_params
